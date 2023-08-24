@@ -17,11 +17,39 @@ musicControl.addEventListener('click', () => {
 });
 
 keys.forEach(key => {
+  let isDragging = false; // Track whether an item is being dragged
+
   key.addEventListener('touchstart', (e) => {
-    e.preventDefault(); // Prevent default touch behavior (scrolling, etc.)
+    e.preventDefault();
+    isDragging = true;
+    const touch = e.touches[0]; // Get the first touch in the event
+    touchStartX = touch.clientX; // Store the initial touch position
+    touchStartY = touch.clientY;
     e.dataTransfer.setData('text/plain', key.dataset.aspect);
   });
+
+  document.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+
+    const touch = e.touches[0];
+    const deltaX = touch.clientX - touchStartX;
+    const deltaY = touch.clientY - touchStartY;
+
+    // Update the position of the dragged element
+    key.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+
+    // Prevent scrolling while dragging
+    e.preventDefault();
+  });
+
+  document.addEventListener('touchend', (e) => {
+    if (!isDragging) return;
+
+    isDragging = false;
+    key.style.transform = ''; // Reset the transform
+  });
 });
+
 
 
 
