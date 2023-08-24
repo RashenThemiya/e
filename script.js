@@ -17,38 +17,34 @@ musicControl.addEventListener('click', () => {
     }
 });
 
-keys.forEach(key => {
-    // Use touchstart event for mobile touch interactions
-    key.addEventListener('touchstart', (e) => {
-        e.preventDefault(); // Prevent default touch behavior
-        e.dataTransfer.setData('text/plain', key.dataset.aspect);
-    });
+// Initialize interact.js for draggable keys
+interact('.key').draggable({
+    listeners: {
+        start(event) {
+            event.target.style.opacity = '0.5'; // Optional visual effect
+        },
+        move(event) {
+            const { dx, dy } = event;
+            const transform = `translate(${dx}px, ${dy}px)`;
+            event.target.style.transform = transform;
+        },
+        end(event) {
+            event.target.style.opacity = '1'; // Restore opacity
+        }
+    }
 });
 
-// Prevent default behavior for both touchmove and touchend to enable drop event
-box.addEventListener('touchmove', (e) => {
-    e.preventDefault();
-});
+// Use interact.js to enable dropping keys into the box
+interact('.box').dropzone({
+    ondrop: function (event) {
+        const aspect = event.relatedTarget.dataset.aspect;
+        const draggedKey = document.querySelector(`[data-aspect="${aspect}"]`);
 
-box.addEventListener('touchend', (e) => {
-    e.preventDefault();
-});
-
-// Use dragover event for touch interactions
-box.addEventListener('dragover', (e) => {
-    e.preventDefault();
-});
-
-// Use drop event for touch interactions
-box.addEventListener('drop', (e) => {
-    e.preventDefault();
-    const aspect = e.dataTransfer.getData('text/plain');
-    const draggedKey = document.querySelector(`[data-aspect="${aspect}"]`);
-
-    if (aspect && draggedKey) {
-        box.innerHTML = `<div class="treasure-open shrink"> </div>`;
-        draggedKey.style.display = 'none';
-        checkAllKeysInBox();
+        if (aspect && draggedKey) {
+            box.innerHTML = `<div class="treasure-open shrink"> </div>`;
+            draggedKey.style.display = 'none';
+            checkAllKeysInBox();
+        }
     }
 });
 
