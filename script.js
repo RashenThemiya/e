@@ -5,44 +5,41 @@ const popup = document.querySelector('.popup');
 const backgroundMusic = document.getElementById('backgroundMusic');
 const musicControl = document.getElementById('musicControl');
 const musicIcon = document.getElementById('musicIcon');
-// Music control
-musicControl.addEventListener('click', () => {
-  if (backgroundMusic.paused) {
-      backgroundMusic.play();
-      musicIcon.innerText = '🎵';
-  } else {
-      backgroundMusic.pause();
-      musicIcon.innerText = '🔇';
-  }
+musicControl.addEventListener('touchstart', (e) => {
+    e.preventDefault(); // Prevent scrolling on touch
+    if (backgroundMusic.paused) {
+        backgroundMusic.play();
+        musicIcon.innerText = '🎵';
+    } else {
+        backgroundMusic.pause();
+        musicIcon.innerText = '🔇';
+    }
 });
 
-// Drag and Drop
 keys.forEach(key => {
-  key.addEventListener('dragstart', (e) => {
-      e.dataTransfer.setData('text/plain', key.dataset.aspect);
-  });
-
-  // Add touchstart event for touch devices
-  key.addEventListener('touchstart', (e) => {
-      e.dataTransfer.setData('text/plain', key.dataset.aspect);
-  });
+    // Use touchstart event for mobile touch interactions
+    key.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // Prevent default touch behavior
+        e.dataTransfer.setData('text/plain', key.dataset.aspect);
+    });
 });
 
-box.addEventListener('dragover', (e) => {
-  e.preventDefault();
+// Use touchmove event for touch interactions
+box.addEventListener('touchmove', (e) => {
+    e.preventDefault();
 });
 
-box.addEventListener('drop', (e) => {
-  e.preventDefault();
-  const aspect = e.dataTransfer.getData('text/plain');
-  const draggedKey = document.querySelector(`[data-aspect="${aspect}"]`);
-  
-  // Add touchend event for touch devices
-  box.addEventListener('touchend', () => {
-      // Handle the drop action here
-  });
-  
-  // Rest of your code remains unchanged
+// Use touchend event for touch interactions
+box.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    const aspect = e.dataTransfer.getData('text/plain');
+    const draggedKey = document.querySelector(`[data-aspect="${aspect}"]`);
+    
+    if (aspect && draggedKey) {
+        box.innerHTML = `<div class="treasure-open shrink"> </div>`;
+        draggedKey.style.display = 'none';
+        checkAllKeysInBox();
+    }
 });
 
 
