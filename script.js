@@ -1,27 +1,49 @@
-const keys = document.querySelectorAll('.key');
-const box = document.getElementById('box');
+
 const overlay = document.getElementById('overlay');
 const popup = document.querySelector('.popup');
 const backgroundMusic = document.getElementById('backgroundMusic');
 const musicControl = document.getElementById('musicControl');
 const musicIcon = document.getElementById('musicIcon');
+const keys = document.querySelectorAll('.key');
+const box = document.getElementById('box');
+let activeKey = null;
 
+// Function to handle touch start
+function handleTouchStart(e) {
+  e.preventDefault();
+  activeKey = this;
+  const touch = e.touches[0];
+  const offsetX = touch.clientX - activeKey.getBoundingClientRect().left;
+  const offsetY = touch.clientY - activeKey.getBoundingClientRect().top;
+  activeKey.style.transition = 'none';
+  activeKey.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+}
 
-musicControl.addEventListener('click', () => {
-    if (backgroundMusic.paused) {
-        backgroundMusic.play();
-        musicIcon.innerText = '🎵';
-    } else {
-        backgroundMusic.pause();
-        musicIcon.innerText = '🔇';
-    }
-});
+// Function to handle touch move
+function handleTouchMove(e) {
+  if (!activeKey) return;
+  const touch = e.touches[0];
+  const newX = touch.clientX - activeKey.offsetWidth / 2;
+  const newY = touch.clientY - activeKey.offsetHeight / 2;
+  activeKey.style.left = `${newX}px`;
+  activeKey.style.top = `${newY}px`;
+}
 
+// Function to handle touch end
+function handleTouchEnd() {
+  if (!activeKey) return;
+  activeKey.style.transition = '';
+  activeKey.style.transform = '';
+  activeKey = null;
 
-
-
+  checkAllKeysInBox();
+}
 
 keys.forEach(key => {
+  key.addEventListener('touchstart', handleTouchStart);
+  key.addEventListener('touchmove', handleTouchMove);
+  key.addEventListener('touchend', handleTouchEnd);
+
   key.addEventListener('dragstart', (e) => {
     e.dataTransfer.setData('text/plain', key.dataset.aspect);
   });
@@ -37,17 +59,15 @@ box.addEventListener('drop', (e) => {
   const draggedKey = document.querySelector(`[data-aspect="${aspect}"]`);
   
   if (aspect && draggedKey) {
-
- 
-      box.innerHTML = `<div class="treasure-open shrink"> </div>`;
-      draggedKey.style.display = 'none';
-   
-      checkAllKeysInBox();
-      
-  
-
+    box.innerHTML = `<div class="treasure-open shrink"></div>`;
+    draggedKey.style.display = 'none';
+    checkAllKeysInBox();
   }
 });
+
+// Rest of your code (checkAllKeysInBox, showWinPopup, countdown)
+// ...
+
 
 function checkAllKeysInBox() {
   const remainingKeys = Array.from(keys).filter(key => key.style.display !== 'none');
