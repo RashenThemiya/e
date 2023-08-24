@@ -5,8 +5,9 @@ const popup = document.querySelector('.popup');
 const backgroundMusic = document.getElementById('backgroundMusic');
 const musicControl = document.getElementById('musicControl');
 const musicIcon = document.getElementById('musicIcon');
-musicControl.addEventListener('touchstart', (e) => {
-    e.preventDefault(); // Prevent scrolling on touch
+
+// Music control (click or touch)
+musicControl.addEventListener('click', () => {
     if (backgroundMusic.paused) {
         backgroundMusic.play();
         musicIcon.innerText = '🎵';
@@ -24,23 +25,53 @@ keys.forEach(key => {
     });
 });
 
-// Use touchmove event for touch interactions
+// Prevent default behavior for both touchmove and touchend to enable drop event
 box.addEventListener('touchmove', (e) => {
     e.preventDefault();
 });
 
-// Use touchend event for touch interactions
 box.addEventListener('touchend', (e) => {
+    e.preventDefault();
+});
+
+// Use dragover event for touch interactions
+box.addEventListener('dragover', (e) => {
+    e.preventDefault();
+});
+
+// Use drop event for touch interactions
+box.addEventListener('drop', (e) => {
     e.preventDefault();
     const aspect = e.dataTransfer.getData('text/plain');
     const draggedKey = document.querySelector(`[data-aspect="${aspect}"]`);
-    
+
     if (aspect && draggedKey) {
         box.innerHTML = `<div class="treasure-open shrink"> </div>`;
         draggedKey.style.display = 'none';
         checkAllKeysInBox();
     }
 });
+
+function checkAllKeysInBox() {
+    const remainingKeys = Array.from(keys).filter(key => key.style.display !== 'none');
+  
+    if (remainingKeys.length === 0) {
+        setTimeout(() => {
+            showWinPopup();
+        }, 1000);
+    }
+}
+
+function showWinPopup() {
+    overlay.style.display = 'flex';
+    popup.classList.add('animate-popup');
+}
+
+popup.addEventListener('animationend', () => {
+    popup.classList.remove('animate-popup');
+});
+
+// Countdown timer code remains the same
 
 
 musicControl.addEventListener('click', () => {
