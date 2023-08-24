@@ -7,6 +7,57 @@ const musicControl = document.getElementById('musicControl');
 const musicIcon = document.getElementById('musicIcon');
 
 musicControl.addEventListener('click', () => {
+    toggleMusic();
+});
+
+musicControl.addEventListener('touchstart', (event) => {
+    event.preventDefault();
+    toggleMusic();
+});
+
+keys.forEach(key => {
+    key.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        e.target.classList.add('selected');
+        e.dataTransfer.setData('text/plain', key.dataset.aspect);
+    });
+
+    key.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        e.target.classList.remove('selected');
+    });
+});
+
+box.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+});
+
+box.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    const aspect = e.changedTouches[0].target.dataset.aspect;
+    const draggedKey = document.querySelector(`[data-aspect="${aspect}"]`);
+
+    if (aspect && draggedKey) {
+        box.innerHTML = `<div class="treasure-open shrink"></div>`;
+        draggedKey.style.display = 'none';
+        checkAllKeysInBox();
+    }
+});
+
+function toggleMusic() {
+    if (backgroundMusic.paused) {
+        backgroundMusic.play();
+        musicIcon.innerText = '🎵';
+    } else {
+        backgroundMusic.pause();
+        musicIcon.innerText = '🔇';
+    }
+}
+
+// Rest of your code remains the same
+
+
+musicControl.addEventListener('click', () => {
     if (backgroundMusic.paused) {
         backgroundMusic.play();
         musicIcon.innerText = '🎵';
