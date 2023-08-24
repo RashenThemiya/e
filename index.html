@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Cricket Treasure Hunt</title>
+</head>
+<body>
+
+  <div class="overlay"></div>
+
+  <div class="container">
+    <h1 id="headline">Countdown to  infobash</h1>
+    <div id="countdown">
+      <ul>
+        <li><span id="days"></span>days</li>
+        <li><span id="hours"></span>Hours</li>
+        <li><span id="minutes"></span>Minutes</li>
+        <li><span id="seconds"></span>Seconds</li>
+      </ul>
+    </div>
+    <div id="content" class="emoji">
+      <span>🥳</span>
+      <span>🎉</span>
+      <span>🎂</span>
+    </div>
+  </div> 
+   
+  <div>
+    <audio id="backgroundMusic" autoplay loop>
+        <source src="nn.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <div class="music-control" id="musicControl">
+        <span id="musicIcon">🎵</span>
+    </div>
+</div>
+
+
+  <div class="ccontainer ">
+    <div class="heder1 shrink" >
+    <h2 > Drag & drop all keys to the treasure! <br>🗝️🏰 Exciting surprise awaits! 🎉<br><br></h2></div>
+    <div class="keys">
+
+      <div  class="key hel"  draggable="true" data-aspect="batting"></div>
+      <div class="key ball" draggable="true" data-aspect="bowling"></div>
+      <div class="key glouse" draggable="true" data-aspect="fielding"></div>
+      <div class="key bat" draggable="true" data-aspect="wicket-keeping"></div>
+    </div>
+    <div class="box" id="box">
+      <div class="treasure"></div>
+    </div> 
+    <br>
+  </div>
+  <div class="overlay" id="overlay">
+    <div class="popup">
+      <h2>🏏🎉 Invitation to the  Info Bash 2023 🎉🏏!</h2>
+      <p>
+
+       <br> Join us for an exhilarating day of cricket and camaraderie at the Info Bash Cricket Festival hosted by the Faculty of Computing, Sabaragamuwa University! 🎊
+        
+        <br>Event Details:
+        
+       <br> Date: August 31st, 2023
+       <br> Time: [Specify Start Time]
+        <br> Matta Ground, Sabaragamuwa University</p>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
