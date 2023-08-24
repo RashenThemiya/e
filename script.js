@@ -34,7 +34,56 @@ function handleTouchEnd() {
   if (!activeKey) return;
   activeKey.style.transition = '';
   activeKey.style.transform = '';
+
+  const boxRect = box.getBoundingClientRect();
+  const keyRect = activeKey.getBoundingClientRect();
+
+  if (
+    keyRect.left >= boxRect.left &&
+    keyRect.right <= boxRect.right &&
+    keyRect.top >= boxRect.top &&
+    keyRect.bottom <= boxRect.bottom
+  ) {
+    activeKey.style.display = 'none';
+    box.innerHTML = '<div class="treasure-open shrink"></div>';
+    checkAllKeysInBox();
+  }
+
   activeKey = null;
+}
+
+keys.forEach(key => {
+  key.addEventListener('touchstart', handleTouchStart);
+  key.addEventListener('touchmove', handleTouchMove);
+  key.addEventListener('touchend', handleTouchEnd);
+
+  key.addEventListener('dragstart', (e) => {
+    e.dataTransfer.setData('text/plain', key.dataset.aspect);
+  });
+});
+
+box.addEventListener('dragover', (e) => {
+  e.preventDefault();
+});
+
+box.addEventListener('drop', (e) => {
+  e.preventDefault();
+  const aspect = e.dataTransfer.getData('text/plain');
+  const draggedKey = document.querySelector(`[data-aspect="${aspect}"]`);
+  
+  if (aspect && draggedKey) {
+    box.innerHTML = `<div class="treasure-open shrink"></div>`;
+    draggedKey.style.display = 'none';
+    checkAllKeysInBox();
+  }
+});
+
+// Rest of your code (checkAllKeysInBox, showWinPopup, countdown)
+// ...
+
+
+
+
 
   checkAllKeysInBox();
 }
