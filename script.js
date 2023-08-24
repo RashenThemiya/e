@@ -5,56 +5,45 @@ const popup = document.querySelector('.popup');
 const backgroundMusic = document.getElementById('backgroundMusic');
 const musicControl = document.getElementById('musicControl');
 const musicIcon = document.getElementById('musicIcon');
-
+// Music control
 musicControl.addEventListener('click', () => {
-    toggleMusic();
+  if (backgroundMusic.paused) {
+      backgroundMusic.play();
+      musicIcon.innerText = '🎵';
+  } else {
+      backgroundMusic.pause();
+      musicIcon.innerText = '🔇';
+  }
 });
 
-musicControl.addEventListener('touchstart', (event) => {
-    event.preventDefault();
-    toggleMusic();
-});
-
+// Drag and Drop
 keys.forEach(key => {
-    key.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        e.target.classList.add('selected');
-        e.dataTransfer.setData('text/plain', key.dataset.aspect);
-    });
+  key.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', key.dataset.aspect);
+  });
 
-    key.addEventListener('touchend', (e) => {
-        e.preventDefault();
-        e.target.classList.remove('selected');
-    });
+  // Add touchstart event for touch devices
+  key.addEventListener('touchstart', (e) => {
+      e.dataTransfer.setData('text/plain', key.dataset.aspect);
+  });
 });
 
-box.addEventListener('touchmove', (e) => {
-    e.preventDefault();
+box.addEventListener('dragover', (e) => {
+  e.preventDefault();
 });
 
-box.addEventListener('touchend', (e) => {
-    e.preventDefault();
-    const aspect = e.changedTouches[0].target.dataset.aspect;
-    const draggedKey = document.querySelector(`[data-aspect="${aspect}"]`);
-
-    if (aspect && draggedKey) {
-        box.innerHTML = `<div class="treasure-open shrink"></div>`;
-        draggedKey.style.display = 'none';
-        checkAllKeysInBox();
-    }
+box.addEventListener('drop', (e) => {
+  e.preventDefault();
+  const aspect = e.dataTransfer.getData('text/plain');
+  const draggedKey = document.querySelector(`[data-aspect="${aspect}"]`);
+  
+  // Add touchend event for touch devices
+  box.addEventListener('touchend', () => {
+      // Handle the drop action here
+  });
+  
+  // Rest of your code remains unchanged
 });
-
-function toggleMusic() {
-    if (backgroundMusic.paused) {
-        backgroundMusic.play();
-        musicIcon.innerText = '🎵';
-    } else {
-        backgroundMusic.pause();
-        musicIcon.innerText = '🔇';
-    }
-}
-
-// Rest of your code remains the same
 
 
 musicControl.addEventListener('click', () => {
