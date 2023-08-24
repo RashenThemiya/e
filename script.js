@@ -6,7 +6,6 @@ const backgroundMusic = document.getElementById('backgroundMusic');
 const musicControl = document.getElementById('musicControl');
 const musicIcon = document.getElementById('musicIcon');
 
-// Music control (click or touch)
 musicControl.addEventListener('click', () => {
     if (backgroundMusic.paused) {
         backgroundMusic.play();
@@ -16,79 +15,16 @@ musicControl.addEventListener('click', () => {
         musicIcon.innerText = '🔇';
     }
 });
-
-// Initialize interact.js for draggable keys
-interact('.key').draggable({
-    listeners: {
-        start(event) {
-            event.target.style.opacity = '0.5'; // Optional visual effect
-        },
-        move(event) {
-            const { dx, dy } = event;
-            const transform = `translate(${dx}px, ${dy}px)`;
-            event.target.style.transform = transform;
-        },
-        end(event) {
-            event.target.style.opacity = '1'; // Restore opacity
-        }
-    }
-});
-
-// Use interact.js to enable dropping keys into the box
-interact('.box').dropzone({
-    ondrop: function (event) {
-        const aspect = event.relatedTarget.dataset.aspect;
-        const draggedKey = document.querySelector(`[data-aspect="${aspect}"]`);
-
-        if (aspect && draggedKey) {
-            box.innerHTML = `<div class="treasure-open shrink"> </div>`;
-            draggedKey.style.display = 'none';
-            checkAllKeysInBox();
-        }
-    }
-});
-
-function checkAllKeysInBox() {
-    const remainingKeys = Array.from(keys).filter(key => key.style.display !== 'none');
-  
-    if (remainingKeys.length === 0) {
-        setTimeout(() => {
-            showWinPopup();
-        }, 1000);
-    }
-}
-
-function showWinPopup() {
-    overlay.style.display = 'flex';
-    popup.classList.add('animate-popup');
-}
-
-popup.addEventListener('animationend', () => {
-    popup.classList.remove('animate-popup');
-});
-
-// Countdown timer code remains the same
-
-
-musicControl.addEventListener('click', () => {
-    if (backgroundMusic.paused) {
-        backgroundMusic.play();
-        musicIcon.innerText = '🎵';
-    } else {
-        backgroundMusic.pause();
-        musicIcon.innerText = '🔇';
-    }
-});
-
-
-
-
 
 keys.forEach(key => {
-  key.addEventListener('dragstart', (e) => {
+  key.addEventListener('touchstart', (e) => {
+    e.preventDefault(); // Prevent default touch behavior (scrolling, etc.)
     e.dataTransfer.setData('text/plain', key.dataset.aspect);
   });
 });
+
+
+
 
 box.addEventListener('dragover', (e) => {
   e.preventDefault();
