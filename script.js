@@ -17,6 +17,43 @@ musicControl.addEventListener('click', () => {
     }
 });
 
+keys.forEach(key => {
+  // For desktop devices
+  key.addEventListener('dragstart', (e) => {
+    e.dataTransfer.setData('text/plain', key.dataset.aspect);
+  });
+
+  // For mobile devices
+  key.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    e.target.classList.add('dragging'); // Add a class for styling
+    e.target.touchX = e.touches[0].clientX;
+    e.target.touchY = e.touches[0].clientY;
+  });
+
+  key.addEventListener('touchmove', (e) => {
+    if (!e.target.classList.contains('dragging')) return;
+
+    e.preventDefault();
+    const touchX = e.touches[0].clientX;
+    const touchY = e.touches[0].clientY;
+
+    const offsetX = touchX - e.target.touchX;
+    const offsetY = touchY - e.target.touchY;
+
+    e.target.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+  });
+
+  key.addEventListener('touchend', (e) => {
+    if (!e.target.classList.contains('dragging')) return;
+
+    e.target.classList.remove('dragging');
+    e.target.style.transform = '';
+
+    // Use the touch coordinates to determine drop location and logic
+    // (Similar to your existing drop logic)
+  });
+});
 
 
 
